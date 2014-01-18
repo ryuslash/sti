@@ -1,0 +1,133 @@
+#!/bin/bash
+# sti --- Stupid Tool Installer
+
+data_home="${XDG_DATA_HOME:-${HOME}/.local/share}/sti"
+bin_home="${HOME}/usr/bin"
+
+function fold () { /usr/bin/fold -s -w $(tput cols); }
+function find-executables ()
+{
+    find "$1" -type f -executable \! -wholename "${data_home}/*/.*"
+}
+
+function help_help { cmd_help "$@"; }
+function cmd_help
+{
+    local xname="$(basename $0)"
+
+    if [[ -n "$1" ]]; then
+        local prefix="help"
+        dispatch "$@"
+    else
+        echo "Usage: $xname <command> ARG"
+        echo
+        echo "Commands include: "
+        echo "  help     Show this help message"
+        echo "  install  Install a tool from a git repository"
+        echo "  remove   Remove an installed tool"
+        echo
+        echo "You can use \`$xname help <command>' to get more \
+information about a command." | fold
+    fi
+}
+
+function help_install ()
+{
+    local xname="$(basename $0)"
+
+    echo "Usage: ${xname} install URL"
+    echo
+    echo "URL should be a valid argument to \`git clone'."
+    echo
+    echo "URL is cloned and for each executable file found in the \
+resulting directory a symlink is created in ${bin_home}. If there is \
+already a file with the same name, no symlink is created and a message \
+is displayed." | fold
+}
+
+function cmd_install ()
+{
+    tool_name=$(basename $1 .git)
+    tool_home="${data_home}/tools/${tool_name}"
+
+    if [[ ! -d "$tool_home" ]]; then
+        git clone $1 "$tool_home"
+
+        for exe in $(find-executables "$tool_home"); do
+            local executable_name=$(basename "$exe")
+            local destination="${bin_home}/${executable_name}"
+
+            if [[ ! -e "$destination" ]]; then
+                ln -s "$exe" "$destination"
+            else
+                echo "Executable ${executable_name} already exists in \
+${bin_home}"
+            fi
+        done
+    else
+        echo "Tool ${tool_name} already installed"
+        exit 2
+    fi
+}
+
+function help_remove ()
+{
+    local xname="$(basename $0)"
+
+    echo "Usage: ${xname} remove TOOL"
+    echo
+    echo "TOOL should be the name of a tool installed previously with \
+\`${xname} install'. This name is the base name of the URL used to \
+install the tool, with the \`.git' suffix removed." | fold
+    echo
+    echo "Any executable files found in the directory of TOOL will have \
+their symlinks in ${bin_home} removed. If a file exists with the same \
+name as one of the symlinks should have and it is not a symlink to one \
+of TOOL's executables, it is not removed and a message is displayed." \
+    | fold
+}
+
+function cmd_remove ()
+{
+    tool_home="${data_home}/tools/$1"
+
+    if [[ -d "$tool_home" ]]; then
+        for exe in $(find-executables "$tool_home"); do
+            local real_path=$(realpath "$exe")
+            local base_name=$(basename "$exe")
+            local link_path="${bin_home}/${base_name}"
+            local linked_path=$(readlink "$link_path")
+
+            if [[ -e "$link_path" ]] \
+               && [[ "$linked_path" == "$real_path" ]]; then
+                rm "$link_path"
+            else
+                echo "Executable ${base_name} is not part of $1"
+            fi
+        done
+        rm -rf "$tool_home" && echo "Succesfully removed $1"
+    else
+        echo "Tool $1 is not installed"
+        exit 2
+    fi
+}
+
+function dispatch
+{
+    local name="${prefix-cmd}_$1"
+
+    if [[ $(type -t "$name") == "function" ]]; then
+        shift
+        "$name" "$@"
+    else
+        echo "Unknown command: $1"
+        exit 1
+    fi
+}
+
+if [[ ${#@} -lt 1 ]]; then
+    cmd_help "$@"
+    exit 1
+else
+    dispatch "$@"
+fi
