@@ -24,10 +24,48 @@ function cmd_help
         echo "Commands include: "
         echo "  help     Show this help message"
         echo "  install  Install a tool from a git repository"
+        echo "  reinit   Retry installing the executables of a tool"
         echo "  remove   Remove an installed tool"
         echo
         echo "You can use \`$xname help <command>' to get more \
 information about a command." | fold
+    fi
+}
+
+function help_reinit ()
+{
+    local xname="$(basename 0)"
+
+    echo "Usage: ${xname} reinit TOOL"
+    echo
+    echo "TOOL should be the name of a tool installed previously with \
+\`${xname} install'. This name is the base name of the URL used to \
+install the tool, with the \`.git' suffix removed." | fold
+    echo
+    echo "Each executable file found in the tool's directory is checked \
+to see if it exists in ${bin_home}, it reports whether it is already \
+installed or doesn't belong to the tool. If it doesn't exist a symlink \
+is created in ${bin_home}." | fold
+}
+
+function cmd_reinit ()
+{
+    local tool_home="${data_home}/tools/$1"
+
+    if [[ -d "$tool_home" ]]; then
+        for exe in $(find-executables "$tool_home"); do
+            local executable_name=$(basename "$exe")
+            local destination="${bin_home}/${executable_name}"
+
+            if [[ ! -e "$destination" ]]; then
+                ln -s "$exe" "$destination"
+            elif [[ "$(readlink $destination)" == "$exe" ]]; then
+                echo "Executable ${executable_name} already installed"
+            else
+                echo "Executable ${executable_name} already exists in \
+${bin_home}"
+            fi
+        done
     fi
 }
 
@@ -52,18 +90,7 @@ function cmd_install ()
 
     if [[ ! -d "$tool_home" ]]; then
         git clone $1 "$tool_home"
-
-        for exe in $(find-executables "$tool_home"); do
-            local executable_name=$(basename "$exe")
-            local destination="${bin_home}/${executable_name}"
-
-            if [[ ! -e "$destination" ]]; then
-                ln -s "$exe" "$destination"
-            else
-                echo "Executable ${executable_name} already exists in \
-${bin_home}"
-            fi
-        done
+        cmd_reinit "$tool_name"
     else
         echo "Tool ${tool_name} already installed"
         exit 2
