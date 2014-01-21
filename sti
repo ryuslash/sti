@@ -88,6 +88,12 @@ function cmd_install ()
     tool_name=$(basename $1 .git)
     tool_home="${data_home}/tools/${tool_name}"
 
+    # Ensure the bin directory exists.
+    if [[ ! -d "$bin_home" ]]; then
+        echo "Creating directory ${bin_home}"
+        mkdir -p "$bin_home"
+    fi
+
     if [[ ! -d "$tool_home" ]]; then
         git clone $1 "$tool_home"
         cmd_reinit "$tool_name"
