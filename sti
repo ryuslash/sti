@@ -34,7 +34,7 @@ information about a command." | fold
 
 function help_reinit ()
 {
-    local xname="$(basename 0)"
+    local xname="$(basename $0)"
 
     echo "Usage: ${xname} reinit TOOL"
     echo
