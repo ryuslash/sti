@@ -24,12 +24,27 @@ function cmd_help
         echo "Commands include: "
         echo "  help     Show this help message"
         echo "  install  Install a tool from a git repository"
+        echo "  list     List downloaded tools"
         echo "  reinit   Retry installing the executables of a tool"
         echo "  remove   Remove an installed tool"
         echo
         echo "You can use \`$xname help <command>' to get more \
 information about a command." | fold
     fi
+}
+
+function help_list ()
+{
+    local xname="$(basename $0)"
+
+    echo "Usage: ${xname} list"
+    echo
+    echo "List all downloaded (possibly installed) tools." | fold
+}
+
+function cmd_list
+{
+    /usr/bin/ls -1 "${data_home}/tools/"
 }
 
 function help_reinit ()
