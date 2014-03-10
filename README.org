@@ -1,0 +1,13 @@
+sti, the Stupid Tool Installer.
+
+* Installation
+
+  Installation can be done by cloning the git repository and linking
+  the ~sti~ executable to a place in path. You could also use this
+  cloned version of sti to install itself by specifying the same URL
+  you used to clone it and making sure that =~/usr/bin= is in your =PATH=.
+
+* Usage
+
+  For usage information run the program without any arguments to see
+  the help text.

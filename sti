@@ -1,5 +1,19 @@
 #!/bin/bash
 # sti --- Stupid Tool Installer
+# Copyright (C) 2014  Tom Willemse <tom@ryuslash.org>
+
+# sti is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your
+# option) any later version.
+
+# sti is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+# License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with sti.  If not, see <http://www.gnu.org/licenses/>.
 
 data_home="${XDG_DATA_HOME:-${HOME}/.local/share}/sti"
 bin_home="${HOME}/usr/bin"
