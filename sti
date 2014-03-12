@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with sti.  If not, see <http://www.gnu.org/licenses/>.
 
+executable_name="$(basename $0)"
 data_home="${XDG_DATA_HOME:-${HOME}/.local/share}/sti"
 bin_home="${HOME}/usr/bin"
 
@@ -27,13 +28,11 @@ function find-executables ()
 function help_help { cmd_help "$@"; }
 function cmd_help
 {
-    local xname="$(basename $0)"
-
     if [[ -n "$1" ]]; then
         local prefix="help"
         dispatch "$@"
     else
-        echo "Usage: $xname <command> ARG"
+        echo "Usage: ${executable_name} <command> ARG"
         echo
         echo "Commands include: "
         echo "  help     Show this help message"
@@ -42,16 +41,14 @@ function cmd_help
         echo "  reinit   Retry installing the executables of a tool"
         echo "  remove   Remove an installed tool"
         echo
-        echo "You can use \`$xname help <command>' to get more \
-information about a command." | fold
+        echo "You can use \`${executable_name} help <command>' to get \
+more information about a command." | fold
     fi
 }
 
 function help_list ()
 {
-    local xname="$(basename $0)"
-
-    echo "Usage: ${xname} list"
+    echo "Usage: ${executable_name} list"
     echo
     echo "List all downloaded (possibly installed) tools." | fold
 }
@@ -63,13 +60,11 @@ function cmd_list
 
 function help_reinit ()
 {
-    local xname="$(basename $0)"
-
-    echo "Usage: ${xname} reinit TOOL"
+    echo "Usage: ${executable_name} reinit TOOL"
     echo
     echo "TOOL should be the name of a tool installed previously with \
-\`${xname} install'. This name is the base name of the URL used to \
-install the tool, with the \`.git' suffix removed." | fold
+\`${executable_name} install'. This name is the base name of the URL \
+used to install the tool, with the \`.git' suffix removed." | fold
     echo
     echo "Each executable file found in the tool's directory is checked \
 to see if it exists in ${bin_home}, it reports whether it is already \
@@ -100,9 +95,7 @@ ${bin_home}"
 
 function help_install ()
 {
-    local xname="$(basename $0)"
-
-    echo "Usage: ${xname} install URL"
+    echo "Usage: ${executable_name} install URL"
     echo
     echo "URL should be a valid argument to \`git clone'."
     echo
@@ -134,13 +127,11 @@ function cmd_install ()
 
 function help_remove ()
 {
-    local xname="$(basename $0)"
-
-    echo "Usage: ${xname} remove TOOL"
+    echo "Usage: ${executable_name} remove TOOL"
     echo
     echo "TOOL should be the name of a tool installed previously with \
-\`${xname} install'. This name is the base name of the URL used to \
-install the tool, with the \`.git' suffix removed." | fold
+\`${executable_name} install'. This name is the base name of the URL \
+used to install the tool, with the \`.git' suffix removed." | fold
     echo
     echo "Any executable files found in the directory of TOOL will have \
 their symlinks in ${bin_home} removed. If a file exists with the same \
