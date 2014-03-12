@@ -151,7 +151,7 @@ function cmd_install ()
     if [[ ! -d "$tool_home" ]]; then
         git clone $1 "$tool_home"
         init "$tool_home" \
-             && printf "Tool %s v%s succesfully installed" \
+             && printf "Tool %s v%s succesfully installed\n" \
                        "$tool_name" $(tool-version "$tool_name")
     else
         echo "Tool ${tool_name} already installed"
@@ -181,7 +181,7 @@ function cmd_remove ()
     if [[ -d "$tool_home" ]]; then
         uninit "$tool_home"
         rm -rf "$tool_home" \
-            && printf "Succesfully removed %s v%s" \
+            && printf "Succesfully removed %s v%s\n" \
                       "$1" $(tool-version "$1")
     else
         echo "Tool $1 is not installed"
@@ -212,7 +212,7 @@ function cmd_update
         uninit "$tool_home"
         cd $tool_home && git pull
         init "$tool_home" \
-            && printf "Updated %s v%s -> v%s" \
+            && printf "Updated %s v%s -> v%s\n" \
                       "$1" "$old_version" $(tool-version "$1")
     else
         echo "Tool $1 is not installed"
