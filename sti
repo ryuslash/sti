@@ -25,6 +25,40 @@ function find-executables ()
     find "$1" -type f -executable \! -wholename "${data_home}/*/.*"
 }
 
+function init
+{
+    for exe in $(find-executables "$1"); do
+        local executable_name=$(basename "$exe")
+        local destination="${bin_home}/${executable_name}"
+
+        if [[ ! -e "$destination" ]]; then
+            ln -s "$exe" "$destination"
+        elif [[ "$(readlink $destination)" == "$exe" ]]; then
+            echo "Executable ${executable_name} already installed"
+        else
+            echo "Executable ${executable_name} already exists in \
+${bin_home}"
+        fi
+    done
+}
+
+function uninit
+{
+    for exe in $(find-executables "$1"); do
+        local real_path=$(realpath "$exe")
+        local base_name=$(basename "$exe")
+        local link_path="${bin_home}/${base_name}"
+        local linked_path=$(readlink "$link_path")
+
+        if [[ -e "$link_path" ]] \
+           && [[ "$linked_path" == "$real_path" ]]; then
+            rm "$link_path"
+        else
+            echo "Executable ${base_name} is not part of $1"
+        fi
+    done
+}
+
 function help_help { cmd_help "$@"; }
 function cmd_help
 {
@@ -40,6 +74,7 @@ function cmd_help
         echo "  list     List downloaded tools"
         echo "  reinit   Retry installing the executables of a tool"
         echo "  remove   Remove an installed tool"
+        echo "  update   Update an installed tool"
         echo
         echo "You can use \`${executable_name} help <command>' to get \
 more information about a command." | fold
@@ -77,19 +112,7 @@ function cmd_reinit ()
     local tool_home="${data_home}/tools/$1"
 
     if [[ -d "$tool_home" ]]; then
-        for exe in $(find-executables "$tool_home"); do
-            local executable_name=$(basename "$exe")
-            local destination="${bin_home}/${executable_name}"
-
-            if [[ ! -e "$destination" ]]; then
-                ln -s "$exe" "$destination"
-            elif [[ "$(readlink $destination)" == "$exe" ]]; then
-                echo "Executable ${executable_name} already installed"
-            else
-                echo "Executable ${executable_name} already exists in \
-${bin_home}"
-            fi
-        done
+        init "$tool_home"
     fi
 }
 
@@ -118,7 +141,7 @@ function cmd_install ()
 
     if [[ ! -d "$tool_home" ]]; then
         git clone $1 "$tool_home"
-        cmd_reinit "$tool_name"
+        init "$tool_home"
     else
         echo "Tool ${tool_name} already installed"
         exit 2
@@ -145,20 +168,36 @@ function cmd_remove ()
     tool_home="${data_home}/tools/$1"
 
     if [[ -d "$tool_home" ]]; then
-        for exe in $(find-executables "$tool_home"); do
-            local real_path=$(realpath "$exe")
-            local base_name=$(basename "$exe")
-            local link_path="${bin_home}/${base_name}"
-            local linked_path=$(readlink "$link_path")
-
-            if [[ -e "$link_path" ]] \
-               && [[ "$linked_path" == "$real_path" ]]; then
-                rm "$link_path"
-            else
-                echo "Executable ${base_name} is not part of $1"
-            fi
-        done
+        uninit "$tool_home"
         rm -rf "$tool_home" && echo "Succesfully removed $1"
+    else
+        echo "Tool $1 is not installed"
+        exit 2
+    fi
+}
+
+function help_update
+{
+    echo "Usage: ${executable_name} update TOOL"
+    echo
+    echo "TOOL should be the name of a tool installed previously with \
+\`${executable_name} install'. This name is the base name of the URL \
+used to install the tool, with the \`.git' suffix removed." | fold
+    echo
+    echo "This command removes all the executables from \`${data_home}' \
+just as \`${executable_name} remove' would, calls \`git pull' in TOOL's \
+directory and then reinstalls the executables as \`${executable_name} \
+reinit' would."
+}
+
+function cmd_update
+{
+    tool_home="${data_home}/tools/$1"
+
+    if [[ -d "$tool_home" ]]; then
+        uninit "$tool_home"
+        cd $tool_home && git pull
+        init "$tool_home"
     else
         echo "Tool $1 is not installed"
         exit 2
