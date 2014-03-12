@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with sti.  If not, see <http://www.gnu.org/licenses/>.
 
-executable_name="$(basename $0)"
+_sti_executable="$(basename $0)"
 data_home="${XDG_DATA_HOME:-${HOME}/.local/share}/sti"
 bin_home="${HOME}/usr/bin"
 
@@ -66,7 +66,7 @@ function cmd_help
         local prefix="help"
         dispatch "$@"
     else
-        echo "Usage: ${executable_name} <command> ARG"
+        echo "Usage: ${_sti_executable} <command> ARG"
         echo
         echo "Commands include: "
         echo "  help     Show this help message"
@@ -76,14 +76,14 @@ function cmd_help
         echo "  remove   Remove an installed tool"
         echo "  update   Update an installed tool"
         echo
-        echo "You can use \`${executable_name} help <command>' to get \
+        echo "You can use \`${_sti_executable} help <command>' to get \
 more information about a command." | fold
     fi
 }
 
 function help_list ()
 {
-    echo "Usage: ${executable_name} list"
+    echo "Usage: ${_sti_executable} list"
     echo
     echo "List all downloaded (possibly installed) tools." | fold
 }
@@ -95,10 +95,10 @@ function cmd_list
 
 function help_reinit ()
 {
-    echo "Usage: ${executable_name} reinit TOOL"
+    echo "Usage: ${_sti_executable} reinit TOOL"
     echo
     echo "TOOL should be the name of a tool installed previously with \
-\`${executable_name} install'. This name is the base name of the URL \
+\`${_sti_executable} install'. This name is the base name of the URL \
 used to install the tool, with the \`.git' suffix removed." | fold
     echo
     echo "Each executable file found in the tool's directory is checked \
@@ -118,7 +118,7 @@ function cmd_reinit ()
 
 function help_install ()
 {
-    echo "Usage: ${executable_name} install URL"
+    echo "Usage: ${_sti_executable} install URL"
     echo
     echo "URL should be a valid argument to \`git clone'."
     echo
@@ -150,10 +150,10 @@ function cmd_install ()
 
 function help_remove ()
 {
-    echo "Usage: ${executable_name} remove TOOL"
+    echo "Usage: ${_sti_executable} remove TOOL"
     echo
     echo "TOOL should be the name of a tool installed previously with \
-\`${executable_name} install'. This name is the base name of the URL \
+\`${_sti_executable} install'. This name is the base name of the URL \
 used to install the tool, with the \`.git' suffix removed." | fold
     echo
     echo "Any executable files found in the directory of TOOL will have \
@@ -178,15 +178,15 @@ function cmd_remove ()
 
 function help_update
 {
-    echo "Usage: ${executable_name} update TOOL"
+    echo "Usage: ${_sti_executable} update TOOL"
     echo
     echo "TOOL should be the name of a tool installed previously with \
-\`${executable_name} install'. This name is the base name of the URL \
+\`${_sti_executable} install'. This name is the base name of the URL \
 used to install the tool, with the \`.git' suffix removed." | fold
     echo
     echo "This command removes all the executables from \`${data_home}' \
-just as \`${executable_name} remove' would, calls \`git pull' in TOOL's \
-directory and then reinstalls the executables as \`${executable_name} \
+just as \`${_sti_executable} remove' would, calls \`git pull' in TOOL's \
+directory and then reinstalls the executables as \`${_sti_executable} \
 reinit' would."
 }
 
