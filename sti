@@ -25,6 +25,13 @@ function find-executables ()
     find "$1" -type f -executable \! -wholename "${data_home}/*/.*"
 }
 
+function tool-version
+{
+    cd "${data_home}/tools/$1" \
+        && git log -n1 --pretty=format:%cd --date=iso \
+           | sed -e 's/-//g' -e 's/ /./' -e 's/://' -e 's/:.*//'
+}
+
 function init
 {
     for exe in $(find-executables "$1"); do
@@ -90,7 +97,9 @@ function help_list ()
 
 function cmd_list
 {
-    /usr/bin/ls -1 "${data_home}/tools/"
+    for tool in $(/usr/bin/ls -1 "${data_home}/tools/"); do
+        printf '%-20s %s\n' $tool $(tool-version "$tool")
+    done
 }
 
 function help_reinit ()
@@ -141,7 +150,9 @@ function cmd_install ()
 
     if [[ ! -d "$tool_home" ]]; then
         git clone $1 "$tool_home"
-        init "$tool_home"
+        init "$tool_home" \
+             && printf "Tool %s v%s succesfully installed" \
+                       "$tool_name" $(tool-version "$tool_name")
     else
         echo "Tool ${tool_name} already installed"
         exit 2
@@ -169,7 +180,9 @@ function cmd_remove ()
 
     if [[ -d "$tool_home" ]]; then
         uninit "$tool_home"
-        rm -rf "$tool_home" && echo "Succesfully removed $1"
+        rm -rf "$tool_home" \
+            && printf "Succesfully removed %s v%s" \
+                      "$1" $(tool-version "$1")
     else
         echo "Tool $1 is not installed"
         exit 2
@@ -195,9 +208,12 @@ function cmd_update
     tool_home="${data_home}/tools/$1"
 
     if [[ -d "$tool_home" ]]; then
+        local old_version=$(tool-version "$1")
         uninit "$tool_home"
         cd $tool_home && git pull
-        init "$tool_home"
+        init "$tool_home" \
+            && printf "Updated %s v%s -> v%s" \
+                      "$1" "$old_version" $(tool-version "$1")
     else
         echo "Tool $1 is not installed"
         exit 2
