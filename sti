@@ -200,7 +200,7 @@ used to install the tool, with the \`.git' suffix removed." | fold
     echo "This command removes all the executables from \`${data_home}' \
 just as \`${_sti_executable} remove' would, calls \`git pull' in TOOL's \
 directory and then reinstalls the executables as \`${_sti_executable} \
-reinit' would."
+reinit' would." | fold
 }
 
 function cmd_update
