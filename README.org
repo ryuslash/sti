@@ -1,13 +1,32 @@
-sti, the Stupid Tool Installer.
+#+TITLE: Stupid Tool Installer
+#+STARTUP: showall
+#+HTML_HEAD: <link type="text/css" rel="stylesheet" href="https://ryuslash.org/org.css" />
+
+~sti~ is a simplistic tool installer written in Bash. It offers simple
+commands to help installing little tools your or otherss have written.
+This document will try to explain to you how to use it.
+
+Bug reports, feature requests, asking for help, and such things can be
+sent to [[mailto:tom@ryuslash.org][tom@ryuslash.org]].
 
 * Installation
 
-  Installation can be done by cloning the git repository and linking
-  the ~sti~ executable to a place in path. You could also use this
-  cloned version of sti to install itself by specifying the same URL
-  you used to clone it and making sure that =~/usr/bin= is in your =PATH=.
+  The =sti= source is stored in a git repository. It can be cloned from
+  the URL ~git://ryuslash.org/sti.git~.
 
-* Usage
+  Installing =sti= is simple. Just put the =sti= executable file somewhere
+  in your =$PATH= and you can start using it. You can also download the
+  executable anywhere and use it from there.
 
-  For usage information run the program without any arguments to see
-  the help text.
+  Another option is to use =sti= to install itself. That way it should
+  be easier to keep it updated as well. To do this, download sti from,
+  for example, the git repository, and run it with the sti git
+  repository url. For example:
+
+  #+BEGIN_EXAMPLE
+    $ curl http://code.ryuslash.org/sti/plain/sti
+    $ ./sti install git://ryuslash.org/sti.git
+  #+END_EXAMPLE
+
+  Since =sti= installs all executables in =~/usr/bin= you should make sure
+  that this directory is included in =$PATH=.

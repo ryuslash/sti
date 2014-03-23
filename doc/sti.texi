@@ -1,0 +1,184 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename sti.info
+@settitle sti User Manual
+@c %**end of header
+@copying
+sti is a simplistic tool installer written in Bash. It offers simple
+commands to help installing little tools you or others have written.
+This manual will try to explain to you how it is used.
+
+Copyright @copyright{} 2014  Tom Willemse
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled ``GNU
+Free Documentation License''.
+
+A copy of the license is also available from the Free Software
+Foundation Web site at @url{http://www.gnu.org/licenses/fdl.html}.
+
+@end quotation
+
+The document was typeset with
+@uref{http://www.texinfo.org/, GNU Texinfo}.
+
+@end copying
+
+@titlepage
+@title sti User Manual
+@subtitle How to use sti
+@author Tom Willemse <tom@@ryuslash.org>
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c Output the table of the contents at the beginning.
+@contents
+
+@ifnottex
+@node Top, Introduction, (dir), (dir)
+@top sti User Manual
+
+@insertcopying
+@end ifnottex
+
+@c Generate the nodes for this menu with `C-c C-u C-m'.
+@menu
+* Introduction::
+* Installation::
+* Commands::
+* Copying This Manual::
+* Index::
+@end menu
+
+@node Introduction, Installation, Top, Top
+@chapter Introduction
+
+sti is a simple program to install simple utilities written by
+(possibly) simple people. It is the Stupid Tool Installer, meaning
+that @emph{it} is stupid, rather than the tools it installs, though those
+may be stupid as well.
+
+It can occur that at some point in time one may acquire quite a
+collection of small tools that are being used to streamline one's
+personal worklow. Having to install, manage and keep track of these
+tools on separate platforms can become tedious.
+
+Any bug reports, feature requests or other kinds of communication can
+be sent by email to @email{tom@@ryuslash.org}.
+
+@c Update all node entries with `C-c C-u C-n'.
+@c Insert new nodes with `C-c C-c n'.
+@node Installation, Commands, Introduction, Top
+@chapter Installing sti
+
+The sti source is stored in a git repository. It can be cloned from
+the URL @url{git://ryuslash.org/sti.git}.
+
+Installing sti is simple. Just put the sti executable file somewhere
+in your @env{PATH} and you can start using it. You can also download
+the executable anywhere and use it from there.
+
+Another option is to use sti to install itself. That way it should be
+easier to keep it updated as well. To do this, download sti from, for
+example, the git repository, and run it with the sti git repository
+url. For example:
+
+@example
+$ curl http://code.ryuslash.org/sti/plain/sti
+$ ./sti install git://ryuslash.org/sti.git
+@end example
+
+Since sti installs all executables in @file{~/usr/bin} you should make
+sure that this directory is included in your @env{PATH} environment
+variable.
+
+@node Commands, Copying This Manual, Installation, Top
+@chapter Available commands
+
+sti offers several commands to help you manage the tools you use.
+Following is a short explanation of what they all do.
+
+@deffn Command help [command]
+The help command offers help to the user. Without any parameters it
+will show a list of available commands with a short description of
+what they do. If this short description is not enough, or if you wish
+to see the possible arguments for those commands you can pass along
+@var{command}, a command name, to the help command and it will show
+you some extra information about it.
+@end deffn
+
+@deffn Command install url
+Install the tool for which the git repository is located at @var{url}.
+This command uses git to clone the repository at @var{url}. After it
+has been cloned it searches through all the files and tries to link
+softlink the directories into a single directory (by default
+@samp{~/usr/bin/}).
+
+If any of the executables it wants to install is already present in
+the destination directory a warning is printed. If you move the
+offending executable, you can use @samp{reinit} to re-install the
+executables without having to download the git repository again.
+
+After installation the tool will be known by the last part of
+@var{url}, with the @samp{.git} part removed. For example, after
+calling:
+
+@example
+sti install git://ryuslash.org/sti.gi
+@end example
+
+@noindent
+The installed tool will be called @samp{sti}. Most other commands will
+expect this name instead of @var{url}.
+@end deffn
+
+@deffn Command list
+List all downloaded (possibly installed) tools. For each installed
+tool the version is displayed as well. The version is determined by
+looking at the date of the latest commit in the local repository. It
+is formatted as @samp{<year><month><day>.<hour><minute>}.
+@end deffn
+
+@deffn Command reinit tool
+When a tool is installed it will not overwrite any executables found
+where sti wants to install them. It will print a warning saying that
+the executable already exists and leave it there. When this happens
+it falls to you to remove, rename or move the executables so they
+don't interfere with the tool you wish to install. After this is done,
+you can use this command to try and install them again without
+downloading anything again.
+@end deffn
+
+@deffn Command remove tool
+Remove @var{tool} and all of its executables. This again searches
+through all the files in @var{tool}'s directory and removes any links
+to executable files that were found. Before deleting something it is
+always checked if it is a link to the executable of @var{tool}. In
+case it is not the file is not removed.
+@end deffn
+
+@deffn Command update tool
+Use @samp{git} to pull in changes made to its repository and add any
+new (and existing) executables to the destination directory.
+@end deffn
+
+@node Copying This Manual, Index, Commands, Top
+@appendix Copying This Manual
+
+@c Get fdl.texi from http://www.gnu.org/licenses/fdl.html
+@include fdl.texi
+
+@node Index,  , Copying This Manual, Top
+@unnumbered Index
+
+@printindex cp
+
+@bye
+
+@c sti.texi ends here
