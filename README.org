@@ -3,7 +3,7 @@
 #+HTML_HEAD: <link type="text/css" rel="stylesheet" href="https://ryuslash.org/org.css" />
 
 ~sti~ is a simplistic tool installer written in Bash. It offers simple
-commands to help installing little tools your or otherss have written.
+commands to help installing little tools you or others have written.
 This document will try to explain to you how to use it.
 
 Bug reports, feature requests, asking for help, and such things can be
