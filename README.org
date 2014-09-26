@@ -7,12 +7,12 @@ commands to help installing little tools you or others have written.
 This document will try to explain to you how to use it.
 
 Bug reports, feature requests, asking for help, and such things can be
-sent to [[mailto:tom@ryuslash.org][tom@ryuslash.org]].
+sent to [[mailto:tom@ryuslash.org][tom@ryuslash.org]] or placed on the [[https://github.com/ryuslash/sti/issues][issue tracker]].
 
 * Installation
 
   The =sti= source is stored in a git repository. It can be cloned from
-  the URL ~git://ryuslash.org/sti.git~.
+  the URL ~git://github.com/ryuslash/sti.git~.
 
   Installing =sti= is simple. Just put the =sti= executable file somewhere
   in your =$PATH= and you can start using it. You can also download the
@@ -24,9 +24,13 @@ sent to [[mailto:tom@ryuslash.org][tom@ryuslash.org]].
   repository url. For example:
 
   #+BEGIN_EXAMPLE
-    $ curl http://code.ryuslash.org/sti/plain/sti
-    $ ./sti install git://ryuslash.org/sti.git
+    $ curl -o sti https://raw.githubusercontent.com/ryuslash/sti/master/sti
+    $ bash sti install git://github.com/ryuslash/sti.git
   #+END_EXAMPLE
+
+  *Note:* Before executing the ~sti~ script for the first time it is
+  always prudent to have a look to see if it doesn't do anything you
+  wouldn't want it to do.
 
   Since =sti= installs all executables in =~/usr/bin= you should make sure
   that this directory is included in =$PATH=.
