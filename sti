@@ -177,12 +177,13 @@ of TOOL's executables, it is not removed and a message is displayed." \
 function cmd_remove ()
 {
     tool_home="${data_home}/tools/$1"
+    local tool_version=$(tool-version "$1")
 
     if [[ -d "$tool_home" ]]; then
         uninit "$tool_home"
         rm -rf "$tool_home" \
             && printf "Succesfully removed %s v%s\n" \
-                      "$1" $(tool-version "$1")
+                      "$1" $tool_version
     else
         echo "Tool $1 is not installed"
         exit 2
