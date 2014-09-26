@@ -150,9 +150,15 @@ function cmd_install ()
 
     if [[ ! -d "$tool_home" ]]; then
         git clone $1 "$tool_home"
-        init "$tool_home" \
-             && printf "Tool %s v%s succesfully installed\n" \
-                       "$tool_name" $(tool-version "$tool_name")
+
+        if [[ $? -eq 0 ]]; then
+            init "$tool_home" \
+                && printf "Tool %s v%s succesfully installed\n" \
+                          "$tool_name" $(tool-version "$tool_name")
+        else
+            echo "Couldn't clone git repository $1, are you sure it's a \
+git repository? sti doesn't support anything else at the moment." | fold
+        fi
     else
         echo "Tool ${tool_name} already installed"
         exit 2
