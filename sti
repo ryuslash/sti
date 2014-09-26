@@ -177,9 +177,9 @@ of TOOL's executables, it is not removed and a message is displayed." \
 function cmd_remove ()
 {
     tool_home="${data_home}/tools/$1"
-    local tool_version=$(tool-version "$1")
 
     if [[ -d "$tool_home" ]]; then
+        local tool_version=$(tool-version "$1")
         uninit "$tool_home"
         rm -rf "$tool_home" \
             && printf "Succesfully removed %s v%s\n" \
