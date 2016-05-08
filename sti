@@ -240,7 +240,7 @@ function dispatch
     fi
 }
 
-if ! which git 2>&1 > /dev/null; then
+if ! which git > /dev/null 2>&1; then
     echo "Couldn't find git, please install it" >&2
     exit 3
 fi
