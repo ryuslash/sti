@@ -240,6 +240,10 @@ function dispatch
     fi
 }
 
+if ! which git 2>&1 > /dev/null; then
+    echo "Couldn't find git, please install it" >&2
+fi
+
 if [[ ${#@} -lt 1 ]]; then
     cmd_help "$@"
     exit 1
