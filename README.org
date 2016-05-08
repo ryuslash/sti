@@ -9,6 +9,10 @@ This document will try to explain to you how to use it.
 Bug reports, feature requests, asking for help, and such things can be
 sent to [[mailto:tom@ryuslash.org][tom@ryuslash.org]] or placed on the [[https://github.com/ryuslash/sti/issues][issue tracker]].
 
+* Requirements
+
+  =sti= requires [[https://git-scm.com][Git]] to be installed.
+
 * Installation
 
   The =sti= source is stored in a git repository. It can be cloned from
